@@ -4,7 +4,7 @@
   "description": "sms-based game created by Intility for The Gathering 2018",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 3000 --recursive",
+    "test": "mocha --timeout 3000 --recursive --exit",
     "start": "nodemon server.js"
   },
   "author": "Callum Powell (callum0x50)",

@@ -1,0 +1,24 @@
+{
+  "name": "sms-game",
+  "version": "1.0.0",
+  "description": "sms-based game created by Intility for The Gathering 2018",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --timeout 3000 --recursive",
+    "start": "nodemon server.js"
+  },
+  "author": "Callum Powell (callum0x50)",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "express-authentication": "^0.3.2",
+    "express-authentication-basic": "^0.3.1",
+    "mongoose": "^5.0.9"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "chai-http": "^1.0.0",
+    "mocha": "^5.0.4",
+    "nodemon": "^1.17.1"
+  }
+}

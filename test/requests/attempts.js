@@ -61,6 +61,7 @@ describe('Attempts', function() {
 				res.body[0].should.have.property('_id');
 				res.body[0].should.have.property('code');
 				res.body[0].should.have.property('phoneNumber');
+				res.body[0].should.have.property('success');
 				res.body[0].should.have.property('createdAt');
 				res.body[0].code.should.equal('12345');
 				res.body[0].phoneNumber.should.equal('+4712345678');				
@@ -83,7 +84,8 @@ describe('Attempts', function() {
 					res.should.be.json;
 					res.body.should.have.property('_id');
 					res.body.should.have.property('code');
-					res.body.should.have.property('phoneNumber');					
+					res.body.should.have.property('phoneNumber');
+					res.body.should.have.property('success');					
 					res.body.should.have.property('createdAt');
 					res.body._id.should.equal(data.id);
 					res.body.code.should.equal('4444');
@@ -107,7 +109,8 @@ describe('Attempts', function() {
 				res.body.should.have.property('_id');
 				res.body.should.have.property('code');
 				res.body.should.have.property('phoneNumber');
-				res.body.should.have.property('createdAt');		
+				res.body.should.have.property('success');
+				res.body.should.have.property('createdAt');
 				res.body.code.should.equal('54321');
 				res.body.phoneNumber.should.equal('+4712341234');				
 				done();
@@ -143,6 +146,7 @@ describe('Attempts', function() {
 						response.body.should.have.property('_id');
 						response.body.should.have.property('code');
 						response.body.should.have.property('phoneNumber');
+						response.body.should.have.property('success');
 						response.body.should.have.property('createdAt');			
 						response.body.code.should.equal('55555');
 						response.body.phoneNumber.should.equal('+4712341234');
@@ -168,6 +172,7 @@ describe('Attempts', function() {
 						response.body.should.have.property('_id');
 						response.body.should.have.property('code');
 						response.body.should.have.property('phoneNumber');
+						response.body.should.have.property('success');
 						response.body.should.have.property('createdAt');			
 						response.body.code.should.equal('55555');
 						response.body.phoneNumber.should.equal('+4712341234');

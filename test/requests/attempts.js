@@ -1,6 +1,4 @@
 
-process.env.NODE_ENV = 'test';
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../../server');
@@ -10,6 +8,7 @@ chai.use(chaiHttp);
 
 
 const Attempt = require('../../models/Attempt');
+const User = require('../../models/User');
 
 const username = 'admin';
 const password = 'secret';
@@ -98,6 +97,15 @@ describe('Attempts', function() {
 
 
   	it('adds a single attempt on POST /attempts/', function(done) {
+    	var newUser = new User({
+			'username':'some-username',
+			'phoneNumber':'+4712341234'
+    	});
+
+		newUser.save(function(err) {
+  			
+		});
+
 		chai.request(server)
 			.post('/attempts')
 			.auth(username, password)
@@ -216,41 +224,3 @@ describe('Attempts', function() {
 			});
 	});
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

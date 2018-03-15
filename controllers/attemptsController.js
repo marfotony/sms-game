@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 
 var Attempt = require('../models/Attempt');
 var Code = require('../models/Code');
+var User = require('../models/User');
 
 router.use(bodyParser.json());
 
@@ -29,22 +30,32 @@ router.get('/:id', function(req, res) {
 router.post('/', function(req, res) {
 	Attempt.create({ code: req.body.code, phoneNumber: req.body.phoneNumber }, function(err, attempt) {
 		if (err) return res.status(500).json("Error creating attempt: " + err);
-		Code.find({ 
-			activatesAt: { $lt: Date(attempt.createdAt) },
-			expiresAt: { $gt: Date(attempt.createdAt) },
-			code: attempt.code
-		}, function(err, codes) {
-			if (err) return res.status(500).json("Error matching attempt to code: " + err);
-			if (codes.length > 0) {
-				attempt.success = true;
-				attempt.save();
 
-				res.status(201).json(attempt);
-			}
+		User.find({
+			phoneNumber: attempt.phoneNumber
+		}, function(err, users) {
+			if (err) return res.status(500).json("Error matching attempt to user: " + err);
+			if (users.length < 1) return res.status(200).json("No user found with phone number: " + attempt.phoneNumber);
 			else {
-				res.status(201).json(attempt);
+				Code.find({ 
+					activatesAt: { $lt: Date(attempt.createdAt) },
+					expiresAt: { $gt: Date(attempt.createdAt) },
+					code: attempt.code
+				}, function(err, codes) {
+					if (err) return res.status(500).json("Error matching attempt to code: " + err);
+					if (codes.length > 0) {
+						attempt.success = true;
+						attempt.save();
+
+						res.status(201).json(attempt);
+					}
+					else {
+						res.status(201).json(attempt);
+					}
+				});
 			}
-		});	
+		});
+
 	});
 });
 

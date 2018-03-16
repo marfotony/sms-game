@@ -31,11 +31,11 @@ router.post('/', function(req, res) {
 	Attempt.create({ code: req.body.code, phoneNumber: req.body.phoneNumber }, function(err, attempt) {
 		if (err) return res.status(500).json("Error creating attempt: " + err);
 
-		User.find({
+		User.findOne({
 			phoneNumber: attempt.phoneNumber
 		}, function(err, users) {
 			if (err) return res.status(500).json("Error matching attempt to user: " + err);
-			if (users.length < 1) return res.status(200).json("No user found with phone number: " + attempt.phoneNumber);
+			if (users == null || users.length < 1) return res.status(200).json("No user found with phone number: " + attempt.phoneNumber);
 			else {
 				Code.find({ 
 					activatesAt: { $lt: Date(attempt.createdAt) },
@@ -46,6 +46,9 @@ router.post('/', function(req, res) {
 					if (codes.length > 0) {
 						attempt.success = true;
 						attempt.save();
+
+						users.score = users.score + 1;
+						users.save();
 
 						res.status(201).json(attempt);
 					}

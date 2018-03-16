@@ -27,10 +27,12 @@ app.use(login);
 var UsersController = require('./controllers/usersController');
 var CodesController = require('./controllers/codesController');
 var AttemptsController = require('./controllers/attemptsController');
+var HealthController = require('./controllers/healthController');
 
 app.use('/users', auth.required(), UsersController);
 app.use('/codes', auth.required(), CodesController);
 app.use('/attempts', auth.required(), AttemptsController);
+app.use('/health', auth.succeeded(), HealthController);
 
 
 

@@ -17,10 +17,10 @@ router.get('/', function(req, res) {
 	});
 });
 
-router.get('/:id', function(req, res) {
-	User.findById(req.params.id, function (err, user) {
+router.get('/:phoneNumber', function(req, res) {
+	User.findOne({ phoneNumber: req.params.phoneNumber}, function (err, user) {
 		if (err) return res.status(500).json("Error getting user: " + err);
-		if (!user) return res.status(404).json("User not found with id: " + req.params.id);
+		if (!user) return res.status(404).json("User not found with phoneNumber: " + req.params.phoneNumber);
 
 		res.status(200).json(user);
 	});
@@ -34,8 +34,8 @@ router.post('/', function(req, res) {
 	});
 });
 
-router.put('/:id', function(req, res) {
-	User.findOneAndUpdate({ _id: req.params.id }, req.body)
+router.put('/:phoneNumber', function(req, res) {
+	User.findOneAndUpdate({ phoneNumber: req.params.phoneNumber }, req.body)
 		.exec(function(err, user) {
 			if (err) return res.status(500).json("Error updating user: " + err);
 
@@ -44,10 +44,10 @@ router.put('/:id', function(req, res) {
 
 });
 
-router.delete('/:id', function(req, res) {
-	User.findOneAndRemove({ _id: req.params.id }, function (err, user) {
+router.delete('/:phoneNumber', function(req, res) {
+	User.findOneAndRemove({ phoneNumber: req.params.phoneNumber }, function (err, user) {
 		if (err) return res.status(500).json("Error deleting user: " + err);
-		if (!user) return res.status(404).json("User not found with id: " + req.params.id);
+		if (!user) return res.status(404).json("User not found with phoneNumber: " + req.params.phoneNumber);
 
 		res.sendStatus(204);
 	});

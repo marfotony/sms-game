@@ -59,7 +59,7 @@ describe('Users', function() {
 			});
 	});
 
-  	it('shows a single user on GET /users/:id', function(done) {
+  	it('shows a single user on GET /users/:phoneNumber', function(done) {
   		let newUser = new User({
   			'phoneNumber':'+4712341234',
   			'username':'nintendo'
@@ -67,7 +67,7 @@ describe('Users', function() {
 
   		newUser.save(function(err, data) {
 			chai.request(server)
-				.get('/users/' + data.id)
+				.get('/users/' + data.phoneNumber)
 				.auth(username, password)
 				.end(function(err, res) {
 					res.should.have.status(200);
@@ -108,7 +108,7 @@ describe('Users', function() {
 			});
 	});
 
-	it('updates a single user on PUT /users/:id', function(done) {
+	it('updates a single user on PUT /users/:phoneNumber', function(done) {
 		var valuesForPut = {
 			'username': 'EltonJohn',
 			'phoneNumber': '+4712341234'
@@ -119,69 +119,69 @@ describe('Users', function() {
 			.auth(username, password)
 			.end(function(err, res) {
 				chai.request(server)
-					.put('/users/' + res.body[0]._id)
+					.put('/users/' + res.body[0].phoneNumber)
 					.auth(username, password)
 					.send(valuesForPut)
-					.end(function(error, response) {
-						response.should.have.status(204);						
-					});
-
-				// perform a get request to verify the put request was successful
-				chai.request(server)
-					.get('/users/' + res.body[0]._id)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(200);
-						response.should.be.json;
-						response.body.should.be.a('object');
-						response.body.should.have.property('_id');
-						response.body.should.have.property('username');
-						response.body.should.have.property('phoneNumber');
-						response.body.should.have.property('score');
-						response.body.should.have.property('isActive');
-						response.body.should.have.property('createdAt');
-						response.body.username.should.equal('EltonJohn');
-						response.body.phoneNumber.should.equal('+4712341234');
-					});
-				
-				// perform another put to verify idempotency
-				chai.request(server)
-					.put('/users/' + res.body[0]._id)
-					.auth(username, password)
-					.send(valuesForPut)
-					.end(function(error, response) {
+					.end(function(error, response) {						
 						response.should.have.status(204);
-					});
 
-				// perform another get to verify idempotency
-				chai.request(server)
-					.get('/users/' + res.body[0]._id)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(200);
-						response.should.be.json;
-						response.body.should.be.a('object');
-						response.body.should.have.property('_id');
-						response.body.should.have.property('username');
-						response.body.should.have.property('phoneNumber');
-						response.body.should.have.property('score');
-						response.body.should.have.property('isActive');
-						response.body.should.have.property('createdAt');
-						response.body.username.should.equal('EltonJohn');
-						response.body.phoneNumber.should.equal('+4712341234');
-						done();
+						// perform a get request to verify the put request was successful
+						chai.request(server)
+							.get('/users/' + valuesForPut.phoneNumber)
+							.auth(username, password)
+							.end(function(error, response) {
+								response.should.have.status(200);
+								response.should.be.json;
+								response.body.should.be.a('object');
+								response.body.should.have.property('_id');
+								response.body.should.have.property('username');
+								response.body.should.have.property('phoneNumber');
+								response.body.should.have.property('score');
+								response.body.should.have.property('isActive');
+								response.body.should.have.property('createdAt');
+								response.body.username.should.equal('EltonJohn');
+								response.body.phoneNumber.should.equal('+4712341234');
+
+								// perform another put to verify idempotency
+								chai.request(server)
+									.put('/users/' + valuesForPut.phoneNumber)
+									.auth(username, password)
+									.send(valuesForPut)
+									.end(function(error, response) {
+										response.should.have.status(204);
+
+										// perform another get to verify idempotency
+										chai.request(server)
+											.get('/users/' + valuesForPut.phoneNumber)
+											.auth(username, password)
+											.end(function(error, response) {
+												response.should.have.status(200);
+												response.should.be.json;
+												response.body.should.be.a('object');
+												response.body.should.have.property('_id');
+												response.body.should.have.property('username');
+												response.body.should.have.property('phoneNumber');
+												response.body.should.have.property('score');
+												response.body.should.have.property('isActive');
+												response.body.should.have.property('createdAt');
+												response.body.username.should.equal('EltonJohn');
+												response.body.phoneNumber.should.equal('+4712341234');
+												done();
+											});										
+									});
+							});	
 					});
 			});
 	});
 
-	it('deletes a single user on DELETE /users/:id', function(done) {
+	it('deletes a single user on DELETE /users/:phoneNumber', function(done) {
 		// get all users
 		chai.request(server)
 			.get('/users/')
 			.auth(username, password)
 			.end(function(err, res) {
 				chai.request(server)
-					.delete('/users/' + res.body[0]._id)
+					.delete('/users/' + res.body[0].phoneNumber)
 					.auth(username, password)
 					.end(function(error, response) {
 						response.should.have.status(204);
@@ -190,7 +190,7 @@ describe('Users', function() {
 
 				// get user to verify deletion - should return 404
 				chai.request(server)
-					.get('/users/' + res.body[0]._id)
+					.get('/users/' + res.body[0].phoneNumber)
 					.auth(username, password)
 					.end(function(error, response) {
 						response.should.have.status(404);
@@ -199,7 +199,7 @@ describe('Users', function() {
 				
 				// delete user again to verify idempotency - should return 404		
 				chai.request(server)
-					.delete('/users/' + res.body[0]._id)
+					.delete('/users/' + res.body[0].phoneNumber)
 					.auth(username, password)
 					.end(function(error, response) {
 						response.should.have.status(404);

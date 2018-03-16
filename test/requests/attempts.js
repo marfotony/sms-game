@@ -10,8 +10,8 @@ chai.use(chaiHttp);
 const Attempt = require('../../models/Attempt');
 const User = require('../../models/User');
 
-const username = 'admin';
-const password = 'secret';
+const username = process.env.ADMIN_USER;
+const password = process.env.ADMIN_PW;
 
 const createDate = (hours = 0) => {
 	var date = new Date();

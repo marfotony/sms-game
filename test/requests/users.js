@@ -9,8 +9,8 @@ chai.use(chaiHttp);
 
 const User = require('../../models/User');
 
-const username = 'admin';
-const password = 'secret';
+const username = process.env.ADMIN_USER;
+const password = process.env.ADMIN_PW;
 
 describe('Users', function() {
 	beforeEach(function(done) {

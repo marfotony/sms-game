@@ -5,6 +5,8 @@ const express = require('express'),
 const app = express();
 const port = process.env.PORT || 3000;
 
+const morgan = require('morgan');
+
 var db = require('./db');
 
 if (!process.env.TWILIO_USER) console.log('WARNING: Environment variable TWILIO_USER not set!');
@@ -22,6 +24,7 @@ var login = basic(function verify(challenge, callback) {
 	}
 });
 
+app.use(morgan('combined'));
 app.use(login);
 
 var UsersController = require('./controllers/usersController');

@@ -158,33 +158,33 @@ describe('Attempts', function() {
 						response.body.should.have.property('createdAt');			
 						response.body.code.should.equal('55555');
 						response.body.phoneNumber.should.equal('+4712341234');
-					});
-				
-				// perform another put to verify idempotency
-				chai.request(server)
-					.put('/attempts/' + res.body[0]._id)
-					.auth(username, password)
-					.send(valuesForPut)
-					.end(function(error, response) {
-						response.should.have.status(204);
-					});
 
-				// perform another get to verify idempotency
-				chai.request(server)
-					.get('/attempts/' + res.body[0]._id)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(200);
-						response.should.be.json;
-						response.body.should.be.a('object');
-						response.body.should.have.property('_id');
-						response.body.should.have.property('code');
-						response.body.should.have.property('phoneNumber');
-						response.body.should.have.property('success');
-						response.body.should.have.property('createdAt');			
-						response.body.code.should.equal('55555');
-						response.body.phoneNumber.should.equal('+4712341234');
-						done();
+						// perform another put to verify idempotency
+						chai.request(server)
+							.put('/attempts/' + res.body[0]._id)
+							.auth(username, password)
+							.send(valuesForPut)
+							.end(function(error, response) {
+								response.should.have.status(204);
+
+								// perform another get to verify idempotency
+								chai.request(server)
+									.get('/attempts/' + res.body[0]._id)
+									.auth(username, password)
+									.end(function(error, response) {
+										response.should.have.status(200);
+										response.should.be.json;
+										response.body.should.be.a('object');
+										response.body.should.have.property('_id');
+										response.body.should.have.property('code');
+										response.body.should.have.property('phoneNumber');
+										response.body.should.have.property('success');
+										response.body.should.have.property('createdAt');			
+										response.body.code.should.equal('55555');
+										response.body.phoneNumber.should.equal('+4712341234');
+										done();
+									});								
+							});
 					});
 			});
 	});
@@ -201,25 +201,25 @@ describe('Attempts', function() {
 					.end(function(error, response) {
 						response.should.have.status(204);
 						response.body.should.be.empty;
-					});
 
-				// get attempt to verify deletion - should return 404
-				chai.request(server)
-					.get('/attempts/' + res.body[0]._id)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(404);
-						response.should.be.json;
-					});
-				
-				// delete attempt again to verify idempotency - should return 404		
-				chai.request(server)
-					.delete('/attempts/' + res.body[0]._id)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(404);
-						response.should.be.json;
-						done();
+						// get attempt to verify deletion - should return 404
+						chai.request(server)
+							.get('/attempts/' + res.body[0]._id)
+							.auth(username, password)
+							.end(function(error, response) {
+								response.should.have.status(404);
+								response.should.be.json;
+
+								// delete attempt again to verify idempotency - should return 404		
+								chai.request(server)
+									.delete('/attempts/' + res.body[0]._id)
+									.auth(username, password)
+									.end(function(error, response) {
+										response.should.have.status(404);
+										response.should.be.json;
+										done();
+									});								
+							});						
 					});
 			});
 	});

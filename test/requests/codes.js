@@ -139,53 +139,53 @@ describe('Codes', function() {
 					.auth(username, password)
 					.send(valuesForPut)
 					.end(function(error, response) {
-						response.should.have.status(204);						
-					});
-
-				// perform a get request to verify the put request was successful
-				chai.request(server)
-					.get('/codes/' + res.body[0]._id)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(200);
-						response.should.be.json;
-						response.body.should.be.a('object');							
-						response.body.should.have.property('_id');
-						response.body.should.have.property('code');
-						response.body.should.have.property('createdAt');
-						response.body.should.have.property('activatesAt');
-						response.body.should.have.property('expiresAt');			
-						response.body.code.should.equal('55555');
-						response.body.activatesAt.should.equal(activatesAtPutValue);
-						response.body.expiresAt.should.equal(expiresAtPutValue);
-					});
-				
-				// perform another put to verify idempotency
-				chai.request(server)
-					.put('/codes/' + res.body[0]._id)
-					.auth(username, password)
-					.send(valuesForPut)
-					.end(function(error, response) {
 						response.should.have.status(204);
-					});
 
-				// perform another get to verify idempotency
-				chai.request(server)
-					.get('/codes/' + res.body[0]._id)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(200);
-						response.should.be.json;
-						response.body.should.be.a('object');
-						response.body.should.have.property('_id');
-						response.body.should.have.property('code');
-						response.body.should.have.property('createdAt');
-						response.body.should.have.property('activatesAt');
-						response.body.should.have.property('expiresAt');			
-						response.body.code.should.equal('55555');
-						response.body.activatesAt.should.equal(activatesAtPutValue);
-						response.body.expiresAt.should.equal(expiresAtPutValue);
-						done();
+						// perform a get request to verify the put request was successful
+						chai.request(server)
+							.get('/codes/' + res.body[0]._id)
+							.auth(username, password)
+							.end(function(error, response) {
+								response.should.have.status(200);
+								response.should.be.json;
+								response.body.should.be.a('object');							
+								response.body.should.have.property('_id');
+								response.body.should.have.property('code');
+								response.body.should.have.property('createdAt');
+								response.body.should.have.property('activatesAt');
+								response.body.should.have.property('expiresAt');			
+								response.body.code.should.equal('55555');
+								response.body.activatesAt.should.equal(activatesAtPutValue);
+								response.body.expiresAt.should.equal(expiresAtPutValue);
+
+								// perform another put to verify idempotency
+								chai.request(server)
+									.put('/codes/' + res.body[0]._id)
+									.auth(username, password)
+									.send(valuesForPut)
+									.end(function(error, response) {
+										response.should.have.status(204);
+
+										// perform another get to verify idempotency
+										chai.request(server)
+											.get('/codes/' + res.body[0]._id)
+											.auth(username, password)
+											.end(function(error, response) {
+												response.should.have.status(200);
+												response.should.be.json;
+												response.body.should.be.a('object');
+												response.body.should.have.property('_id');
+												response.body.should.have.property('code');
+												response.body.should.have.property('createdAt');
+												response.body.should.have.property('activatesAt');
+												response.body.should.have.property('expiresAt');			
+												response.body.code.should.equal('55555');
+												response.body.activatesAt.should.equal(activatesAtPutValue);
+												response.body.expiresAt.should.equal(expiresAtPutValue);
+												done();
+											});										
+									});								
+							});
 					});
 			});
 	});
@@ -202,25 +202,25 @@ describe('Codes', function() {
 					.end(function(error, response) {
 						response.should.have.status(204);
 						response.body.should.be.empty;
-					});
 
-				// get code to verify deletion - should return 404
-				chai.request(server)
-					.get('/codes/' + res.body[0]._id)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(404);
-						response.should.be.json;
-					});
-				
-				// delete code again to verify idempotency - should return 404		
-				chai.request(server)
-					.delete('/codes/' + res.body[0]._id)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(404);
-						response.should.be.json;
-						done();
+						// get code to verify deletion - should return 404
+						chai.request(server)
+							.get('/codes/' + res.body[0]._id)
+							.auth(username, password)
+							.end(function(error, response) {
+								response.should.have.status(404);
+								response.should.be.json;
+
+								// delete code again to verify idempotency - should return 404		
+								chai.request(server)
+									.delete('/codes/' + res.body[0]._id)
+									.auth(username, password)
+									.end(function(error, response) {
+										response.should.have.status(404);
+										response.should.be.json;
+										done();
+									});								
+							});						
 					});
 			});
 	});

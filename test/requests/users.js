@@ -186,25 +186,25 @@ describe('Users', function() {
 					.end(function(error, response) {
 						response.should.have.status(204);
 						response.body.should.be.empty;
-					});
 
-				// get user to verify deletion - should return 404
-				chai.request(server)
-					.get('/users/' + res.body[0].phoneNumber)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(404);
-						response.should.be.json;
-					});
-				
-				// delete user again to verify idempotency - should return 404		
-				chai.request(server)
-					.delete('/users/' + res.body[0].phoneNumber)
-					.auth(username, password)
-					.end(function(error, response) {
-						response.should.have.status(404);
-						response.should.be.json;
-						done();
+						// get user to verify deletion - should return 404
+						chai.request(server)
+							.get('/users/' + res.body[0].phoneNumber)
+							.auth(username, password)
+							.end(function(error, response) {
+								response.should.have.status(404);
+								response.should.be.json;
+
+								// delete user again to verify idempotency - should return 404		
+								chai.request(server)
+									.delete('/users/' + res.body[0].phoneNumber)
+									.auth(username, password)
+									.end(function(error, response) {
+										response.should.have.status(404);
+										response.should.be.json;
+										done();
+									});								
+							});						
 					});
 			});
 	});

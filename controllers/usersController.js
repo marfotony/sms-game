@@ -27,7 +27,6 @@ router.get('/:phoneNumber', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-	console.log(req.body);
 	User.create({ phoneNumber: req.body.phoneNumber, username: req.body.username }, function(err, user) {
 		if (err) return res.status(500).json("Error creating user: " + err);
 

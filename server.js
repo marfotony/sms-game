@@ -24,7 +24,8 @@ var login = basic(function verify(challenge, callback) {
 	}
 });
 
-app.use(morgan('combined'));
+if (process.env.NODE_ENV !== 'test') app.use(morgan('combined'));
+
 app.use(login);
 
 var UsersController = require('./controllers/usersController');

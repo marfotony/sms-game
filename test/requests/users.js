@@ -15,8 +15,7 @@ const password = process.env.ADMIN_PW;
 describe('Users', function() {
 	beforeEach(function(done) {
     	var newUser = new User({
-			'phoneNumber':'+4712345678',
-			'username':'rocketman123'
+			'phoneNumber':'+4712345678'			
     	});
 
 		newUser.save(function(err) {
@@ -48,12 +47,10 @@ describe('Users', function() {
 				res.should.be.json;
 				res.body.should.be.a('array');
 				res.body[0].should.have.property('_id');
-				res.body[0].should.have.property('phoneNumber');
-				res.body[0].should.have.property('username');
+				res.body[0].should.have.property('phoneNumber');				
 				res.body[0].should.have.property('score');
 				res.body[0].should.have.property('isActive');
 				res.body[0].should.have.property('createdAt');
-				res.body[0].username.should.equal('rocketman123');
 				res.body[0].phoneNumber.should.equal('+4712345678');
 				done();
 			});
@@ -61,8 +58,7 @@ describe('Users', function() {
 
   	it('shows a single user on GET /users/:phoneNumber', function(done) {
   		let newUser = new User({
-  			'phoneNumber':'+4712341234',
-  			'username':'nintendo'
+  			'phoneNumber':'+4712341234'  			
   		});
 
   		newUser.save(function(err, data) {
@@ -74,12 +70,10 @@ describe('Users', function() {
 					res.should.be.json;
 					res.body.should.be.a('object');
 					res.body.should.have.property('_id');
-					res.body.should.have.property('phoneNumber');
-					res.body.should.have.property('username');
+					res.body.should.have.property('phoneNumber');					
 					res.body.should.have.property('score');
 					res.body.should.have.property('isActive');
 					res.body.should.have.property('createdAt');
-					res.body.username.should.equal('nintendo');
 					res.body.phoneNumber.should.equal('+4712341234');
 					res.body._id.should.equal(data.id);
 					done();
@@ -96,13 +90,11 @@ describe('Users', function() {
 				res.should.have.status(201);
 				res.should.be.json;
 				res.body.should.be.a('object');
-				res.body.should.have.property('_id');
-				res.body.should.have.property('username');
+				res.body.should.have.property('_id');				
 				res.body.should.have.property('phoneNumber');
 				res.body.should.have.property('score');
 				res.body.should.have.property('isActive');
-				res.body.should.have.property('createdAt');				
-				res.body.username.should.equal('nintendo');
+				res.body.should.have.property('createdAt');
 				res.body.phoneNumber.should.equal('+4712341234');
 				done();
 			});
@@ -110,7 +102,6 @@ describe('Users', function() {
 
 	it('updates a single user on PUT /users/:phoneNumber', function(done) {
 		var valuesForPut = {
-			'username': 'EltonJohn',
 			'phoneNumber': '+4712341234'
 		};
 
@@ -133,13 +124,11 @@ describe('Users', function() {
 								response.should.have.status(200);
 								response.should.be.json;
 								response.body.should.be.a('object');
-								response.body.should.have.property('_id');
-								response.body.should.have.property('username');
+								response.body.should.have.property('_id');								
 								response.body.should.have.property('phoneNumber');
 								response.body.should.have.property('score');
 								response.body.should.have.property('isActive');
 								response.body.should.have.property('createdAt');
-								response.body.username.should.equal('EltonJohn');
 								response.body.phoneNumber.should.equal('+4712341234');
 
 								// perform another put to verify idempotency
@@ -158,13 +147,11 @@ describe('Users', function() {
 												response.should.have.status(200);
 												response.should.be.json;
 												response.body.should.be.a('object');
-												response.body.should.have.property('_id');
-												response.body.should.have.property('username');
+												response.body.should.have.property('_id');												
 												response.body.should.have.property('phoneNumber');
 												response.body.should.have.property('score');
 												response.body.should.have.property('isActive');
 												response.body.should.have.property('createdAt');
-												response.body.username.should.equal('EltonJohn');
 												response.body.phoneNumber.should.equal('+4712341234');
 												done();
 											});										

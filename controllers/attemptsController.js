@@ -29,13 +29,20 @@ router.get('/:id', function(req, res) {
 
 router.post('/', function(req, res) {
 	Attempt.create({ code: req.body.code, phoneNumber: req.body.phoneNumber }, function(err, attempt) {
-		if (err) return res.status(500).json("Error creating attempt: " + err);
+		if (err) {
+			if (err.name === 'ValidationError') {
+				if (err.errors.phoneNumber.kind === 'required') return res.status(400).json("Error creating attempt: phoneNumber is required");
+				if (err.errors.code.kind === 'required') return res.status(400).json("Error creating attempt: code is required");
+			}
+			
+			else return res.status(500).json("Error creating attempt: " + err);
+		}
 
 		User.findOne({
 			phoneNumber: attempt.phoneNumber
 		}, function(err, users) {
 			if (err) return res.status(500).json("Error matching attempt to user: " + err);
-			if (users == null || users.length < 1) return res.status(200).json("No user found with phone number: " + attempt.phoneNumber);
+			if (users == null || users.length < 1) return res.status(404).json("User must exist to create attempt. No user found with phoneNumber: " + attempt.phoneNumber);
 			else {
 				Code.find({ 
 					activatesAt: { $lt: Date(attempt.createdAt) },

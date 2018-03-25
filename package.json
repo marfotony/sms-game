@@ -11,6 +11,7 @@
   "author": "Callum Powell (callum0x50)",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.4",
     "express": "4.16.2",
     "express-authentication": "0.3.2",
     "express-authentication-basic": "0.3.1",

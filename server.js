@@ -2,6 +2,7 @@ const express = require('express'),
 	auth = require('express-authentication'),
 	basic = require('express-authentication-basic');
 
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -25,6 +26,13 @@ var login = basic(function verify(challenge, callback) {
 });
 
 if (process.env.NODE_ENV !== 'test') app.use(morgan('combined'));
+
+const corsOptions = {
+	credentials: true
+}
+
+app.use(cors);
+app.options('http://localhost:3001', cors(corsOptions)); // include before other routes
 
 app.use(login);
 

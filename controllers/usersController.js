@@ -28,10 +28,11 @@ router.get('/:phoneNumber', function(req, res) {
 
 router.post('/', function(req, res) {
 	User.create({ phoneNumber: req.body.phoneNumber, username: req.body.username }, function(err, user) {
-		if (err) {
+		if (err) {		
 			if (err.name === 'ValidationError') {
 				if (err.errors.phoneNumber.kind === 'required') return res.status(400).json("Error creating user: phoneNumber is required");
 			}
+			else if (err.name === 'BulkWriteError') return res.status(409).json(err.errmsg);
 
 			else return res.status(500).json("Error creating user: " + err);
 		}

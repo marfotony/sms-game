@@ -28,12 +28,11 @@ var login = basic(function verify(challenge, callback) {
 if (process.env.NODE_ENV !== 'test') app.use(morgan('combined'));
 
 const corsOptions = {
-	credentials: true
+	credentials: true,
+	origin: 'http://localhost:3001'
 }
 
-app.use(cors);
-app.options('http://localhost:3001', cors(corsOptions)); // include before other routes
-
+app.use(cors(corsOptions));
 app.use(login);
 
 var UsersController = require('./controllers/usersController');

@@ -35,7 +35,7 @@ router.post('/', function(req, res) {
 });
 
 router.put('/:id', function(req, res) {
-	Code.findOneAndUpdate(req.params.id, req.body)
+	Code.findOneAndUpdate({ _id: req.params.id }, req.body)
 		.exec(function(err, code) {
 			if (err) return res.status(500).json("Error updating code: " + err);
 

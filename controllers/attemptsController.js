@@ -28,44 +28,53 @@ router.get('/:id', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-	Attempt.create({ code: req.body.code, phoneNumber: req.body.phoneNumber }, function(err, attempt) {
-		if (err) {
-			if (err.name === 'ValidationError') {
-				if (err.errors.phoneNumber.kind === 'required') return res.status(400).json("Error creating attempt: phoneNumber is required");
-				if (err.errors.code.kind === 'required') return res.status(400).json("Error creating attempt: code is required");
-			}
-			
-			else return res.status(500).json("Error creating attempt: " + err);
-		}
+	User.findOne({
+		phoneNumber: req.body.phoneNumber
+	}, function (err, user) {
+		if (err) return res.status(500).json("Error matching attempt to user: " + err);
+		else if (user == null || user.length < 1) return res.status(404).json("User must exist to create attempt. No user found with phoneNumber: " + req.body.phoneNumber);
 
-		User.findOne({
-			phoneNumber: attempt.phoneNumber
-		}, function(err, users) {
-			if (err) return res.status(500).json("Error matching attempt to user: " + err);
-			if (users == null || users.length < 1) return res.status(404).json("User must exist to create attempt. No user found with phoneNumber: " + attempt.phoneNumber);
+		currentTime = new Date();
+		cooldownTime = new Date(currentTime.getTime() - 30 * 60000);
+		Attempt.find({
+			phoneNumber: req.body.phoneNumber,
+			createdAt: { $gt: cooldownTime }
+		}, function(err, attempt) {
+			if (attempt !== null && attempt.length > 0) return res.status(200).json("User has submitted code in the past 30 minutes. Ignoring this request.");
 			else {
-				Code.find({ 
-					activatesAt: { $lt: Date(attempt.createdAt) },
-					expiresAt: { $gt: Date(attempt.createdAt) },
-					code: attempt.code
-				}, function(err, codes) {
-					if (err) return res.status(500).json("Error matching attempt to code: " + err);
-					if (codes.length > 0) {
-						attempt.success = true;
-						attempt.save();
+				Attempt.create({ code: req.body.code, phoneNumber: req.body.phoneNumber }, function(err, attempt) {
+						if (err) {
+							if (err.name === 'ValidationError') {
+								if (err.errors.phoneNumber.kind === 'required') return res.status(400).json("Error creating attempt: phoneNumber is required");
+								if (err.errors.code.kind === 'required') return res.status(400).json("Error creating attempt: code is required");
+							}
+							
+							else return res.status(500).json("Error creating attempt: " + err);
+						}
+						else {
+							Code.find({ 
+								activatesAt: { $lt: Date(attempt.createdAt) },
+								expiresAt: { $gt: Date(attempt.createdAt) },
+								code: attempt.code
+							}, function(err, codes) {
+								if (err) return res.status(500).json("Error matching attempt to code: " + err);
+								if (codes.length > 0) {
+									attempt.success = true;
+									attempt.save();
 
-						users.score = users.score + 1;
-						users.save();
+									user.score = user.score + 1;
+									user.save();
 
-						res.status(201).json(attempt);
-					}
-					else {
-						res.status(201).json(attempt);
-					}
-				});
+									res.status(201).json(attempt);
+								}
+								else {
+									res.status(201).json(attempt);
+								}
+							});
+						}
+				});				
 			}
 		});
-
 	});
 });
 

@@ -30,13 +30,13 @@ if (process.env.NODE_ENV !== 'test') app.use(morgan('combined'));
 const whitelist = ['https://tg18-sms-web.openshift.intility.no', 'http://localhost:3001'];
 const corsOptions = {
 	credentials: true,
-	origin: function (origin, callback) {
+	origin: ['https://tg18-sms-web.openshift.intility.no', 'http://localhost:3001'] /*function (origin, callback) {
 			    if (whitelist.indexOf(origin) !== -1) {
 			      callback(null, true)
 			    } else {
 			      callback(new Error('Not allowed by CORS'))
 			    }
-		   	}
+		   	}*/
 }
 
 app.use(cors(corsOptions));

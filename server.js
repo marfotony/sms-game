@@ -27,9 +27,16 @@ var login = basic(function verify(challenge, callback) {
 
 if (process.env.NODE_ENV !== 'test') app.use(morgan('combined'));
 
+const whitelist = ['http://localhost:3001', 'https://tg18-sms.openshift.intility.no'];
 const corsOptions = {
 	credentials: true,
-	origin: 'http://localhost:3001'
+	origin: function (origin, callback) {
+			    if (whitelist.indexOf(origin) !== -1) {
+			      callback(null, true)
+			    } else {
+			      callback(new Error('Not allowed by CORS'))
+			    }
+		   	}
 }
 
 app.use(cors(corsOptions));

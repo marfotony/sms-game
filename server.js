@@ -30,13 +30,7 @@ if (process.env.NODE_ENV !== 'test') app.use(morgan('combined'));
 const whitelist = ['https://tg18-sms-web.openshift.intility.no', 'http://localhost:3001'];
 const corsOptions = {
 	credentials: true,
-	origin: ['https://tg18-sms-web.openshift.intility.no', 'http://localhost:3001'] /*function (origin, callback) {
-			    if (whitelist.indexOf(origin) !== -1) {
-			      callback(null, true)
-			    } else {
-			      callback(new Error('Not allowed by CORS'))
-			    }
-		   	}*/
+	origin: ['https://tg18-sms-web.openshift.intility.no', 'http://localhost:3001']
 }
 
 app.use(cors(corsOptions));
@@ -46,12 +40,13 @@ var UsersController = require('./controllers/usersController');
 var CodesController = require('./controllers/codesController');
 var AttemptsController = require('./controllers/attemptsController');
 var HealthController = require('./controllers/healthController');
+var BroadcastController = require('./controllers/broadcastController');
 
 app.use('/users', auth.required(), UsersController);
+app.use('/broadcast', auth.required(), BroadcastController);
 app.use('/codes', auth.required(), CodesController);
 app.use('/attempts', auth.required(), AttemptsController);
 app.use('/health', auth.succeeded(), HealthController);
-
 
 
 app.listen(port, () => console.log('sms-game listening on port 3000!'));

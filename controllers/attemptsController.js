@@ -35,12 +35,12 @@ router.post('/', function(req, res) {
 		else if (user == null || user.length < 1) return res.status(404).json("User must exist to create attempt. No user found with phoneNumber: " + req.body.phoneNumber);
 
 		currentTime = new Date();
-		cooldownTime = new Date(currentTime.getTime() - 30 * 60000);
+		cooldownTime = new Date(currentTime.getTime() - 15 * 60000);
 		Attempt.find({
 			phoneNumber: req.body.phoneNumber,
 			createdAt: { $gt: cooldownTime }
 		}, function(err, attempt) {
-			if (attempt !== null && attempt.length > 0) return res.status(200).json("User has submitted code in the past 30 minutes. Ignoring this request.");
+			if (attempt !== null && attempt.length > 0) return res.status(200).json("User has submitted code in the past 15 minutes. Ignoring this request.");
 			else {
 				Attempt.create({ code: req.body.code, phoneNumber: req.body.phoneNumber }, function(err, attempt) {
 						if (err) {

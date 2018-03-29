@@ -23,12 +23,26 @@ const broadcastSMS = (number) => {
 	.then((message) => console.log(message.sid));
 }
 
+const broadcastThanksForPlaying = (number) => {
+	var accountSid = process.env.TWILIO_ACCOUNT_SID; // Your Account SID from www.twilio.com/console
+	var authToken = process.env.TWILIO_AUTH_TOKEN;   // Your Auth Token from www.twilio.com/console
+
+	var client = new twilio(accountSid, authToken);
+
+	client.messages.create({
+	    body: 'The Intility T-Rex game is finished for today and the scores will now reset. The winner will be contacted by SMS. Hunt again tomorrow for a new chance to win!',
+	    to: number,  // Text this number
+	    from: '+4759444250' // From a valid Twilio number
+	})
+	.then((message) => console.log(message.sid));
+}
+
 router.get('/', function(req, res) {
 	User.find({ isActive: true }, function(err, users) {
 		if (err) return res.status(500).json("Error getting users: " + err);
 
 		users.map((user) => {
-			broadcastSMS(user.phoneNumber);
+			broadcastThanksForPlaying(user.phoneNumber);
 		}); 
 
 		res.status(200).json("broadcast ok");

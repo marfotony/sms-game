@@ -24,7 +24,7 @@ const broadcastSMS = (number) => {
 }
 
 router.get('/', function(req, res) {
-	User.find({}, function(err, users) {
+	User.find({ isActive: true }, function(err, users) {
 		if (err) return res.status(500).json("Error getting users: " + err);
 
 		users.map((user) => {

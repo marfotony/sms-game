@@ -42,7 +42,7 @@ router.get('/', function(req, res) {
 		if (err) return res.status(500).json("Error getting users: " + err);
 
 		users.map((user) => {
-			broadcastThanksForPlaying(user.phoneNumber);
+			broadcastSMS(user.phoneNumber);
 		}); 
 
 		res.status(200).json("broadcast ok");

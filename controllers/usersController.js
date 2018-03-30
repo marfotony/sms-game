@@ -60,4 +60,11 @@ router.delete('/:phoneNumber', function(req, res) {
 	});
 });
 
+router.delete('/reset', function(req, res) {
+	User.updateMany({}, {$set: {score: 0}}, function (error, result) {
+		if (err) return res.status(500).json("Error resetting scores " + err);
+		console.log(result);
+	});
+});
+
 module.exports = router;

@@ -41,12 +41,14 @@ var CodesController = require('./controllers/codesController');
 var AttemptsController = require('./controllers/attemptsController');
 var HealthController = require('./controllers/healthController');
 var BroadcastController = require('./controllers/broadcastController');
+var ResetController = require('./controllers/resetController');
 
 app.use('/users', auth.required(), UsersController);
 app.use('/broadcast', auth.required(), BroadcastController);
 app.use('/codes', auth.required(), CodesController);
 app.use('/attempts', auth.required(), AttemptsController);
 app.use('/health', auth.succeeded(), HealthController);
+app.use('/reset', auth.required(), ResetController);
 
 
 app.listen(port, () => console.log('sms-game listening on port 3000!'));

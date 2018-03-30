@@ -9,14 +9,14 @@ var twilio = require('twilio');
 
 router.use(bodyParser.json());
 
-const broadcastSMS = (number) => {
+const broadcastSMS = (number, msg) => {
 	var accountSid = process.env.TWILIO_ACCOUNT_SID; // Your Account SID from www.twilio.com/console
 	var authToken = process.env.TWILIO_AUTH_TOKEN;   // Your Auth Token from www.twilio.com/console
 
 	var client = new twilio(accountSid, authToken);
 
 	client.messages.create({
-	    body: 'The Intility T-Rex is loose! Find it and reply with the 4-digit code on its back to gain points! Send stop to unsubscribe',
+	    body: msg,
 	    to: number,  // Text this number
 	    from: '+4759444250' // From a valid Twilio number
 	})
@@ -37,12 +37,14 @@ const broadcastThanksForPlaying = (number) => {
 	.then((message) => console.log(message.sid));
 }
 
-router.get('/', function(req, res) {
+router.post('/', function(req, res) {
 	User.find({ isActive: true }, function(err, users) {
 		if (err) return res.status(500).json("Error getting users: " + err);
+		if (users == null || users.length < 1) return res.status(404).json("No users found");
+		if (req.body.message == null) return res.status(400).json("Message is a required parameter");
 
 		users.map((user) => {
-			broadcastSMS(user.phoneNumber);
+			broadcastSMS(user.phoneNumber, req.body.message);
 		}); 
 
 		res.status(200).json("broadcast ok");
